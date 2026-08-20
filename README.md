@@ -2,8 +2,6 @@
 
 A REST API for uploading, storing, and managing files, built with Spring Boot and deployed on AWS. Files are stored in Amazon S3; metadata (filename, size, content type, upload time) is tracked in MySQL.
 
-**Live demo:** `http://13.201.131.201:8080/api/files` *(EC2 instance — may be stopped when not actively demoing; contact me to spin it back up)*
-
 ## Tech stack
 
 - **Backend:** Java 21, Spring Boot 4, Spring Data JPA
@@ -11,7 +9,8 @@ A REST API for uploading, storing, and managing files, built with Spring Boot an
 - **Storage:** AWS S3 (via AWS SDK for Java v2)
 - **Deployment:** AWS EC2, provisioned with CloudFormation (infrastructure-as-code)
 
-## Architecture : 
+## Architecture
+
 Client (Postman / frontend)
 │
 ▼
@@ -40,14 +39,19 @@ Spring Boot REST API (EC2)
 ```
 
 2. Set environment variables (never hardcoded in source):
-   AWS_ACCESS_KEY_ID=your-key
-   AWS_SECRET_ACCESS_KEY=your-secret
-   DB_PASSWORD=your-mysql-password
 
-   
+AWS_ACCESS_KEY_ID=your-key
+AWS_SECRET_ACCESS_KEY=your-secret
+DB_PASSWORD=your-mysql-password
+
+
 3. Update `application.properties` with your S3 bucket name and AWS region.
 
-4. Run: ./mvnw spring-boot:run
+4. Run:
+
+./mvnw spring-boot:run
+
+   App starts on `localhost:8080`.
 
 ## Deployment
 
@@ -56,7 +60,7 @@ Infrastructure is provisioned via CloudFormation (`deploy/cloudformation-templat
 - A security group allowing SSH (22) and app traffic (8080)
 - MySQL (MariaDB) installed and initialized automatically on instance launch
 
-The Spring Boot app is packaged as a JAR, transferred to the instance via `scp`, and run in the background with `nohup` so it stays up after the SSH session ends.
+The Spring Boot app is packaged as a JAR, transferred to the instance via `scp`, and run in the background with `nohup` so it stays up after the SSH session ends. This was successfully deployed and tested live on EC2 during development.
 
 ## Security notes
 
@@ -67,9 +71,4 @@ The Spring Boot app is packaged as a JAR, transferred to the instance via `scp`,
 
 ## Notes
 
-This project was built end-to-end as a learning exercise in cloud deployment — including working through real issues along the way: CloudFormation instance-type/free-tier constraints,
-SSH key path and terminal encoding issues, an AWS credential leak caught and resolved via GitHub's push protection (keys rotated immediately),
-and Hibernate dialect/JDBC connection troubleshooting between local and deployed environments.
-
-One thing worth deciding before you finalize this: do you want to keep the live EC2 IP in the README (meaning you'd need to keep the instance running, or update the IP if you restart it later), 
-or would you rather remove the "Live demo" line entirely and just describe the deployment without a clickable link? Either is fine — just let me know and I'll adjust.
+This project was built end-to-end as a learning exercise in cloud deployment — including working through real issues along the way: CloudFormation instance-type/free-tier constraints, SSH key path and terminal encoding issues, an AWS credential leak caught and resolved via GitHub's push protection (keys rotated immediately), and Hibernate dialect/JDBC connection troubleshooting between local and deployed environments.
